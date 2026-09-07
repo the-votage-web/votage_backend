@@ -1,12 +1,13 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 
 
 class GrowthTrack(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     cohort_name = models.CharField(max_length=100)
-    start_date = models.DateField()
-    end_date = models.DateField()
+    start_date = models.DateField(default=timezone.now)
+    end_date = models.DateField(default=timezone.now)
 
     STATUS_CHOICES = [
         ("planned", "Planned"),
@@ -36,7 +37,7 @@ class GrowthTrackEnrollment(models.Model):
         on_delete=models.CASCADE,
         related_name="growth_track_enrollments"
     )
-    enrollment_date = models.DateField()
+    enrollment_date = models.DateField(default=timezone.now)
 
     STATUS_CHOICES = [
         ("active", "Active"),

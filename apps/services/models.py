@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 
 
 class ServiceType(models.Model):
@@ -18,7 +19,7 @@ class ServiceType(models.Model):
 
 class Service(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, default="Sunday Service")
     theme = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
     service_type = models.ForeignKey(
@@ -28,7 +29,7 @@ class Service(models.Model):
         blank=True,
         related_name="services"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return f"{self.name} ({self.theme or 'No Theme'})"

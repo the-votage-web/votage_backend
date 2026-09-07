@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 from djangoyearlessdate.models import YearlessDateField
 
 
@@ -18,7 +19,7 @@ class Member(models.Model):
     is_worker = models.BooleanField(default=False)
     member_status = models.CharField(max_length=32, default="regular_member")
     date_joined = models.DateTimeField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -33,8 +34,8 @@ class FirstTimers(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name="first_timer_records")
     service = models.ForeignKey("services.Service", null=True, blank=True, on_delete=models.SET_NULL, related_name="first_timers")
-    service_name = models.CharField(max_length=200)
-    service_date = models.DateField()
+    service_name = models.CharField(max_length=200, default="Sunday Service")
+    service_date = models.DateField(default=timezone.now)
     service_type = models.CharField(max_length=50, blank=True, null=True)
     heard_about_church = models.CharField(max_length=50, blank=True, null=True)
     heard_about_church_other = models.CharField(max_length=200, blank=True, null=True)

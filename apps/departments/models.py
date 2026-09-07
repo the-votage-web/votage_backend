@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 
 
 class Directorate(models.Model):
@@ -13,7 +14,7 @@ class Directorate(models.Model):
         blank=True,
         related_name="directorates_led"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -48,7 +49,7 @@ class Department(models.Model):
         blank=True,
         related_name="departments_assisted"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -70,7 +71,7 @@ class DepartmentMembership(models.Model):
         on_delete=models.CASCADE,
         related_name="memberships"
     )
-    joined_at = models.DateField()
+    joined_at = models.DateField(default=timezone.now)
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -112,7 +113,7 @@ class Unit(models.Model):
         related_name="units_led",
         verbose_name="Unit Head / Assistant HOD"
     )
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     class Meta:
         db_table = "units"
@@ -143,7 +144,7 @@ class UnitMembership(models.Model):
         on_delete=models.CASCADE,
         related_name="memberships"
     )
-    joined_at = models.DateField()
+    joined_at = models.DateField(default=timezone.now)
     is_active = models.BooleanField(default=True)
     role = models.CharField(
         max_length=100,

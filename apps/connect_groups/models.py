@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from django.utils import timezone
 
 
 class ConnectGroup(models.Model):
@@ -15,7 +16,7 @@ class ConnectGroup(models.Model):
     description = models.TextField(blank=True)
     meeting_day = models.CharField(max_length=20)
     meeting_time = models.CharField(max_length=80, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
         return self.name
@@ -37,7 +38,7 @@ class ConnectGroupMember(models.Model):
         on_delete=models.CASCADE,
         related_name="connect_group_memberships"
     )
-    joined_at = models.DateField(auto_now_add=True)
+    joined_at = models.DateField(default=timezone.now)
     left_at = models.DateField(null=True, blank=True)
 
     def __str__(self):
@@ -60,7 +61,7 @@ class ConnectGroupPastor(models.Model):
         on_delete=models.CASCADE,
         related_name="connect_groups"
     )
-    start_date = models.DateField()
+    start_date = models.DateField(default=timezone.now)
     end_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
