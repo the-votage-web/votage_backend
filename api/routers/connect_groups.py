@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from apps.connect_groups.models import ConnectGroup, ConnectGroupMember, ConnectGroupPastor
 from ..schemas.connect_groups import (
@@ -25,7 +26,7 @@ def create_connect_group(cg_in: ConnectGroupCreate):
 
 # Members
 @router.get("/{cg_id}/members/", response_model=List[ConnectGroupMemberOut])
-def list_cg_members(cg_id: int):
+def list_cg_members(cg_id: UUID):
     return [ConnectGroupMemberOut.from_orm(m) for m in ConnectGroupMember.objects.filter(connect_group_id=cg_id).select_related("member")]
 
 @router.post("/members/", response_model=ConnectGroupMemberOut)
@@ -35,7 +36,7 @@ def add_cg_member(m_in: ConnectGroupMemberCreate):
 
 # Pastors
 @router.get("/{cg_id}/pastors/", response_model=List[ConnectGroupPastorOut])
-def list_cg_pastors(cg_id: int):
+def list_cg_pastors(cg_id: UUID):
     return [ConnectGroupPastorOut.from_orm(p) for p in ConnectGroupPastor.objects.filter(connect_group_id=cg_id).select_related("pastor")]
 
 @router.post("/pastors/", response_model=ConnectGroupPastorOut)

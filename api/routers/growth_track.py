@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from apps.growth_track.models import GrowthTrack, GrowthTrackEnrollment
 from ..schemas.growth_track import (
@@ -24,7 +25,7 @@ def create_growth_track(gt_in: GrowthTrackCreate):
 
 # Enrollments
 @router.get("/{gt_id}/enrollments/", response_model=List[GrowthTrackEnrollmentOut])
-def list_enrollments(gt_id: int):
+def list_enrollments(gt_id: UUID):
     return [GrowthTrackEnrollmentOut.from_orm(e) for e in GrowthTrackEnrollment.objects.filter(growth_track_id=gt_id).select_related("member")]
 
 @router.post("/enrollments/", response_model=GrowthTrackEnrollmentOut)

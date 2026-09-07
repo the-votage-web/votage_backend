@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from apps.pastors.models import Pastor
 from ..schemas.pastors import PastorCreate, PastorUpdate, PastorOut
@@ -20,14 +21,14 @@ def create_pastor(pastor_in: PastorCreate):
     return PastorOut.from_orm(pastor)
 
 @router.get("/{pastor_id}", response_model=PastorOut)
-def get_pastor(pastor_id: int):
+def get_pastor(pastor_id: UUID):
     try:
         return PastorOut.from_orm(Pastor.objects.get(pk=pastor_id))
     except Pastor.DoesNotExist:
         raise HTTPException(status_code=404, detail="Pastor not found")
 
 @router.patch("/{pastor_id}", response_model=PastorOut)
-def update_pastor(pastor_id: int, pastor_in: PastorUpdate):
+def update_pastor(pastor_id: UUID, pastor_in: PastorUpdate):
     try:
         pastor = Pastor.objects.get(pk=pastor_id)
         update_data = pastor_in.dict(exclude_unset=True)
@@ -39,7 +40,7 @@ def update_pastor(pastor_id: int, pastor_in: PastorUpdate):
         raise HTTPException(status_code=404, detail="Pastor not found")
 
 @router.delete("/{pastor_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_pastor(pastor_id: int):
+def delete_pastor(pastor_id: UUID):
     try:
         Pastor.objects.get(pk=pastor_id).delete()
         return None

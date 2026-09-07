@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from apps.events.models import Event, EventParticipation
 from ..schemas.events import EventCreate, EventUpdate, EventOut, EventParticipationCreate, EventParticipationOut
@@ -20,14 +21,14 @@ def create_event(event_in: EventCreate):
     return EventOut.from_orm(event)
 
 @router.get("/{event_id}", response_model=EventOut)
-def get_event(event_id: int):
+def get_event(event_id: UUID):
     try:
         return EventOut.from_orm(Event.objects.get(pk=event_id))
     except Event.DoesNotExist:
         raise HTTPException(status_code=404, detail="Event not found")
 
 @router.patch("/{event_id}", response_model=EventOut)
-def update_event(event_id: int, event_in: EventUpdate):
+def update_event(event_id: UUID, event_in: EventUpdate):
     try:
         event = Event.objects.get(pk=event_id)
         update_data = event_in.dict(exclude_unset=True)
@@ -39,7 +40,7 @@ def update_event(event_id: int, event_in: EventUpdate):
         raise HTTPException(status_code=404, detail="Event not found")
 
 @router.delete("/{event_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_event(event_id: int):
+def delete_event(event_id: UUID):
     try:
         Event.objects.get(pk=event_id).delete()
         return None
@@ -48,7 +49,7 @@ def delete_event(event_id: int):
 
 # Participation
 @router.get("/{event_id}/participants/", response_model=List[EventParticipationOut])
-def list_participants(event_id: int):
+def list_participants(event_id: UUID):
     return [EventParticipationOut.from_orm(p) for p in EventParticipation.objects.filter(event_id=event_id)]
 
 @router.post("/participation/", response_model=EventParticipationOut, status_code=status.HTTP_201_CREATED)

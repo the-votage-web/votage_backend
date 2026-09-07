@@ -1,4 +1,5 @@
 from typing import List
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from apps.services.models import Service, ServiceType
 from ..schemas.services import ServiceCreate, ServiceUpdate, ServiceOut, ServiceTypeCreate, ServiceTypeOut
@@ -31,14 +32,14 @@ def create_service(service_in: ServiceCreate):
     return ServiceOut.from_orm(service)
 
 @router.get("/{service_id}", response_model=ServiceOut)
-def get_service(service_id: int):
+def get_service(service_id: UUID):
     try:
         return ServiceOut.from_orm(Service.objects.get(pk=service_id))
     except Service.DoesNotExist:
         raise HTTPException(status_code=404, detail="Service not found")
 
 @router.patch("/{service_id}", response_model=ServiceOut)
-def update_service(service_id: int, service_in: ServiceUpdate):
+def update_service(service_id: UUID, service_in: ServiceUpdate):
     try:
         service = Service.objects.get(pk=service_id)
         update_data = service_in.dict(exclude_unset=True)
@@ -50,7 +51,7 @@ def update_service(service_id: int, service_in: ServiceUpdate):
         raise HTTPException(status_code=404, detail="Service not found")
 
 @router.delete("/{service_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_service(service_id: int):
+def delete_service(service_id: UUID):
     try:
         Service.objects.get(pk=service_id).delete()
         return None

@@ -1,41 +1,50 @@
 from typing import Optional
 from pydantic import BaseModel
-from datetime import datetime, time, date
+from datetime import datetime, date
 from uuid import UUID
+
 
 class ConnectGroupBase(BaseModel):
     name: str
     description: Optional[str] = ""
     meeting_day: str
-    meeting_time: time
+    meeting_time: Optional[str] = ""
+    service_id: Optional[UUID] = None
+
 
 class ConnectGroupCreate(ConnectGroupBase):
     pass
+
 
 class ConnectGroupUpdate(BaseModel):
     name: Optional[str] = None
     description: Optional[str] = None
     meeting_day: Optional[str] = None
-    meeting_time: Optional[time] = None
+    meeting_time: Optional[str] = None
+    service_id: Optional[UUID] = None
+
 
 class ConnectGroupOut(ConnectGroupBase):
-    id: int
+    id: UUID
     created_at: datetime
 
     class Config:
         from_attributes = True
 
+
 class ConnectGroupMemberBase(BaseModel):
-    connect_group_id: int
+    connect_group_id: UUID
     member_id: UUID
-    joined_at: date
+    joined_at: Optional[date] = None
     left_at: Optional[date] = None
+
 
 class ConnectGroupMemberCreate(ConnectGroupMemberBase):
     pass
 
+
 class ConnectGroupMemberOut(ConnectGroupMemberBase):
-    id: int
+    id: UUID
     member_name: Optional[str] = None
 
     class Config:
@@ -48,17 +57,20 @@ class ConnectGroupMemberOut(ConnectGroupMemberBase):
             data.member_name = f"{obj.member.first_name} {obj.member.last_name}"
         return data
 
+
 class ConnectGroupPastorBase(BaseModel):
-    connect_group_id: int
-    pastor_id: int
+    connect_group_id: UUID
+    pastor_id: UUID
     start_date: date
     end_date: Optional[date] = None
+
 
 class ConnectGroupPastorCreate(ConnectGroupPastorBase):
     pass
 
+
 class ConnectGroupPastorOut(ConnectGroupPastorBase):
-    id: int
+    id: UUID
     pastor_name: Optional[str] = None
 
     class Config:

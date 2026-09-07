@@ -3,16 +3,19 @@ from pydantic import BaseModel
 from datetime import datetime, date
 from uuid import UUID
 
+
 class DirectorateBase(BaseModel):
     name: str
     description: Optional[str] = ""
     director_id: Optional[UUID] = None
 
+
 class DirectorateCreate(DirectorateBase):
     pass
 
+
 class DirectorateOut(DirectorateBase):
-    id: int
+    id: UUID
     created_at: datetime
     director_name: Optional[str] = None
 
@@ -26,18 +29,21 @@ class DirectorateOut(DirectorateBase):
             data.director_name = f"{obj.director.first_name} {obj.director.last_name}"
         return data
 
+
 class DepartmentBase(BaseModel):
     name: str
     description: Optional[str] = ""
-    directorate_id: int
+    directorate_id: Optional[UUID] = None
     hod_id: Optional[UUID] = None
     assistant_hod_id: Optional[UUID] = None
+
 
 class DepartmentCreate(DepartmentBase):
     pass
 
+
 class DepartmentOut(DepartmentBase):
-    id: int
+    id: UUID
     created_at: datetime
     directorate_name: Optional[str] = None
     hod_name: Optional[str] = None
@@ -54,17 +60,20 @@ class DepartmentOut(DepartmentBase):
             data.hod_name = f"{obj.hod.first_name} {obj.hod.last_name}"
         return data
 
+
 class UnitBase(BaseModel):
     name: str
     description: Optional[str] = ""
-    department_id: int
+    department_id: UUID
     unit_head_id: Optional[UUID] = None
+
 
 class UnitCreate(UnitBase):
     pass
 
+
 class UnitOut(UnitBase):
-    id: int
+    id: UUID
     created_at: datetime
     department_name: Optional[str] = None
     unit_head_name: Optional[str] = None
@@ -81,17 +90,20 @@ class UnitOut(UnitBase):
             data.unit_head_name = f"{obj.unit_head.first_name} {obj.unit_head.last_name}"
         return data
 
+
 class DepartmentMembershipBase(BaseModel):
     member_id: UUID
-    department_id: int
+    department_id: UUID
     joined_at: date
     is_active: bool = True
+
 
 class DepartmentMembershipCreate(DepartmentMembershipBase):
     pass
 
+
 class DepartmentMembershipOut(DepartmentMembershipBase):
-    id: int
+    id: UUID
     member_name: Optional[str] = None
     department_name: Optional[str] = None
     directorate_name: Optional[str] = None
@@ -110,18 +122,21 @@ class DepartmentMembershipOut(DepartmentMembershipBase):
                 data.directorate_name = obj.department.directorate.name
         return data
 
+
 class UnitMembershipBase(BaseModel):
     member_id: UUID
-    unit_id: int
+    unit_id: UUID
     joined_at: date
     is_active: bool = True
     role: Optional[str] = ""
 
+
 class UnitMembershipCreate(UnitMembershipBase):
     pass
 
+
 class UnitMembershipOut(UnitMembershipBase):
-    id: int
+    id: UUID
     member_name: Optional[str] = None
 
     class Config:

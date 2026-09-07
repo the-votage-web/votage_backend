@@ -3,14 +3,17 @@ from pydantic import BaseModel
 from datetime import datetime, date
 from uuid import UUID
 
+
 class GrowthTrackBase(BaseModel):
     cohort_name: str
     start_date: date
     end_date: date
     status: str
 
+
 class GrowthTrackCreate(GrowthTrackBase):
     pass
+
 
 class GrowthTrackUpdate(BaseModel):
     cohort_name: Optional[str] = None
@@ -18,8 +21,9 @@ class GrowthTrackUpdate(BaseModel):
     end_date: Optional[date] = None
     status: Optional[str] = None
 
+
 class GrowthTrackOut(GrowthTrackBase):
-    id: int
+    id: UUID
     created_at: datetime
     enrollment_count: Optional[int] = 0
 
@@ -29,22 +33,25 @@ class GrowthTrackOut(GrowthTrackBase):
     @classmethod
     def from_orm(cls, obj):
         data = super().from_orm(obj)
-        if hasattr(obj, "growthtrackenrollment_set"):
-            data.enrollment_count = obj.growthtrackenrollment_set.count()
+        if hasattr(obj, "enrollments"):
+            data.enrollment_count = obj.enrollments.count()
         return data
 
+
 class GrowthTrackEnrollmentBase(BaseModel):
-    growth_track_id: int
+    growth_track_id: UUID
     member_id: UUID
     enrollment_date: date
     status: str
     graduation_date: Optional[date] = None
 
+
 class GrowthTrackEnrollmentCreate(GrowthTrackEnrollmentBase):
     pass
 
+
 class GrowthTrackEnrollmentOut(GrowthTrackEnrollmentBase):
-    id: int
+    id: UUID
     member_name: Optional[str] = None
 
     class Config:

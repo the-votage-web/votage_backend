@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from apps.attendance.models import Attendance
 from ..schemas.attendance import AttendanceCreate, AttendanceOut
@@ -11,7 +12,7 @@ router = APIRouter(
 )
 
 @router.get("/", response_model=List[AttendanceOut])
-def list_attendance(service_id: Optional[int] = None):
+def list_attendance(service_id: Optional[UUID] = None):
     queryset = Attendance.objects.all().select_related("member", "service")
     if service_id:
         queryset = queryset.filter(service_id=service_id)
@@ -26,7 +27,7 @@ def record_attendance(attendance_in: AttendanceCreate):
         raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/{attendance_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_attendance(attendance_id: int):
+def delete_attendance(attendance_id: UUID):
     try:
         Attendance.objects.get(pk=attendance_id).delete()
         return None

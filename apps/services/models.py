@@ -1,25 +1,38 @@
+import uuid
 from django.db import models
 
-from apps import members
-from apps import pastors
-from apps import connect_groups
-# Create your models here.
 
 class ServiceType(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     is_recurring = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
 
-import uuid
+    class Meta:
+        db_table = "service_types"
+        managed = True
+
 
 class Service(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     theme = models.CharField(max_length=255, null=True, blank=True)
     location = models.CharField(max_length=255, null=True, blank=True)
+    service_type = models.ForeignKey(
+        ServiceType,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="services"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f"{self.name} ({self.theme or 'No Theme'})"
+
     class Meta:
-        db_table = 'service'
-        managed = False
+        db_table = "service"
+        managed = True

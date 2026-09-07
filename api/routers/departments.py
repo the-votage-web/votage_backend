@@ -1,4 +1,5 @@
 from typing import List, Optional
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException, status
 from apps.departments.models import Directorate, Department, Unit, DepartmentMembership, UnitMembership
 from ..schemas.departments import (
@@ -46,13 +47,11 @@ def create_unit(u_in: UnitCreate):
     u = Unit.objects.create(**u_in.dict())
     return UnitOut.from_orm(u)
 
-from uuid import UUID
-
 # Memberships
 @router.get("/memberships/", response_model=List[DepartmentMembershipOut])
 def list_dept_memberships(
     member_id: Optional[UUID] = None,
-    department_id: Optional[int] = None
+    department_id: Optional[UUID] = None
 ):
     queryset = DepartmentMembership.objects.all().select_related("member", "department", "department__directorate")
     if member_id:
