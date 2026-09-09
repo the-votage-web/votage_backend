@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class ServiceType(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=80)
     description = models.TextField(blank=True)
     is_recurring = models.BooleanField(default=False)
 
@@ -19,9 +19,9 @@ class ServiceType(models.Model):
 
 class Service(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=100, default="Sunday Service")
-    theme = models.CharField(max_length=255, null=True, blank=True)
-    location = models.CharField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=80, default="Sunday Service")
+    theme = models.CharField(max_length=80, null=True, blank=True)
+    location = models.CharField(max_length=80, null=True, blank=True)
     service_type = models.ForeignKey(
         ServiceType,
         on_delete=models.SET_NULL,

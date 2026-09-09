@@ -52,11 +52,11 @@ class ConnectGroupMemberAdmin(admin.ModelAdmin):
     list_display = (
         'member_link',
         'connect_group',
-        'joined_at',
+        'created_at',
         'left_at',
         'is_active',
     )
-    list_filter = ('connect_group', 'joined_at', 'left_at')
+    list_filter = ('connect_group', 'created_at', 'left_at')
     search_fields = (
         'member__first_name',
         'member__last_name',
@@ -65,8 +65,8 @@ class ConnectGroupMemberAdmin(admin.ModelAdmin):
     )
     raw_id_fields = ('member',)
     autocomplete_fields = ['member']
-    date_hierarchy = 'joined_at'
-    ordering = ('-joined_at',)
+    date_hierarchy = 'created_at'
+    ordering = ('-created_at',)
 
     def member_link(self, obj):
         url = f"/admin/members/member/{obj.member.id}/change/"

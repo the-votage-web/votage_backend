@@ -21,7 +21,7 @@ class Attendance(models.Model):
     )
     service_type = models.CharField(max_length=32, default="Sunday Service")
     connect_name = models.CharField(max_length=80, null=True, blank=True)
-    checkin_code = models.CharField(max_length=32, unique=True, null=True, blank=True)
+    checkin_code = models.CharField(max_length=32, unique=True)
     service_date = models.DateField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
 
